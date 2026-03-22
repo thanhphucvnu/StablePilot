@@ -24,7 +24,7 @@ We ship a **live dashboard**, **80+ HTTP endpoints**, **audit hashes**, **Promet
 
 ## 1:05 – 3:15 | Live Demo (screen recording)
 
-**Environment:** `npm run dev`, browser at `http://localhost:8080`, `SIMULATION_MODE=true` unless you have safe WDK keys.
+**Environment:** Prefer your **public deploy** (e.g. `https://your-service.onrender.com`) so judges see the same URL as on the submission form — note **free-tier cold start** (~30–60s) and optionally show `/health` first. Alternative: `npm run dev` at `http://localhost:8080` with `SIMULATION_MODE=true` unless you have safe WDK keys.
 
 1. **Hero + Command center** — Scroll from landing to dashboard; point to **Treasury health** and **Stability Index** live stats.
 2. **Policy & labs** — Toggle a **preset** (e.g. conservative → aggressive); show **effective policy** JSON updating. Set **simulated balance** below min → **Run once** → show **history row** + optional **transfer** column.

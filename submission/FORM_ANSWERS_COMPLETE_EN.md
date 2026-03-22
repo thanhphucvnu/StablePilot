@@ -50,14 +50,14 @@ StablePilot runs a closed loop: read balance (WDK or simulation) → compute dri
 
 ## Repository URL
 
-`[PASTE_PUBLIC_GITHUB_OR_GITLAB_URL]`
+https://github.com/thanhphucvnu/StablePilot
 
 ---
 
 ## Live Product URL (if deployed)
 
-`[PASTE_HTTPS_DEMO_OR_WRITE_NOT_APPLICABLE]`  
-Example: `N/A — judges run locally with npm run dev (see README)` or `https://your-demo.onrender.com`
+`[PASTE_YOUR_RENDER_OR_PRODUCTION_HTTPS_URL]`  
+Example: `https://stablepilot.onrender.com` (replace with your actual Render hostname). Judges: append `/health` to verify the instance is up (free tier may cold-start ~30–60s).
 
 ---
 

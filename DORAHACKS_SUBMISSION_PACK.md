@@ -17,7 +17,7 @@ Submission page: https://dorahacks.io/hackathon/hackathon-galactica-wdk-2026-01/
 
 ## 2) Fast Copy-Paste Form (fill this first)
 
-**Primary (English, complete):** `submission/FORM_ANSWERS_COMPLETE_EN.md` — paste sections into DoraHacks; replace `[PLACEHOLDER]` values (repo URL, video URL, team, city).
+**Primary (English, complete):** `submission/FORM_ANSWERS_COMPLETE_EN.md` — paste sections into DoraHacks; replace remaining placeholders (video URL, live demo URL, team, city). Repo URL is pre-filled to GitHub.
 
 **Alternatives:** `submission/FORM_ANSWERS_TEMPLATE.md` (blank scaffold), `submission/FORM_ANSWERS_FILLED_STABLEPILOT.md` (StablePilot draft; cross-links the English pack).
 
@@ -28,6 +28,8 @@ Submission page: https://dorahacks.io/hackathon/hackathon-galactica-wdk-2026-01/
 | `submission/THIRD_PARTY_DISCLOSURE_STABLEPILOT.md` | Paste or attach for third-party disclosure |
 | `submission/DEMO_VIDEO_SCRIPT_STABLEPILOT_EN.md` | ≤5 min recording script |
 | `submission/JUDGE_QUICK_REFERENCE_EN.md` | One-page judge cheat sheet |
+| `submission/PITCH_DECK_SLIDES_EN.md` | Slide copy for video on-screen titles or pitch deck |
+| `submission/SUBMIT_FINAL_READINESS_EN.md` | What’s still missing before submit |
 | `submission/README_SUBMISSION_CHECKLIST.md` | Final checkbox pass |
 
 ## 3) Required Assets Checklist
