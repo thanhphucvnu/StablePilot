@@ -1,0 +1,53 @@
+PORT=8080
+RUN_INTERVAL_MS=15000
+SIMULATION_MODE=true
+
+# WDK config (replace with real values if available)
+WDK_API_BASE_URL=https://api.wdk.example
+WDK_API_KEY=replace_me
+WDK_WALLET_ID=wallet_demo
+# Optional second wallet (read-only telemetry; same WDK API)
+# WDK_SECONDARY_WALLET_ID=
+# SIM_SECONDARY_USDT_BALANCE=5000
+
+# Agent policy (base values; dashboard can switch preset: conservative | balanced | aggressive)
+POLICY_PRESET=balanced
+MIN_USDT_BALANCE=200
+TARGET_USDT_BALANCE=500
+MAX_TX_AMOUNT=100
+
+# Safety: minimum time between real/simulated transfers (ms)
+TRANSFER_COOLDOWN_MS=60000
+
+# Optional: POST JSON events (transfer_executed, transfer_failed, transfer_deferred_cooldown)
+WEBHOOK_URL=
+# Optional HMAC on webhook body: X-StablePilot-Signature: sha256=<hex>
+# WEBHOOK_HMAC_SECRET=
+
+# Autonomy: autonomous (default) | approval — approval queues WDK transfer for human approve via API/dashboard
+AUTONOMY_MODE=autonomous
+
+# Governance: when true, block WDK transfer if balance-flow z-score exceeds threshold (reproducible stats)
+GOVERNANCE_STRICT=false
+GOVERNANCE_Z_THRESHOLD=2.5
+
+# Optional: executive 2-sentence paraphrase for judges (OpenAI-compatible API)
+# OPENAI_API_KEY=
+# OPENAI_BASE_URL=https://api.openai.com/v1
+# EXPLAIN_MODEL=gpt-4o-mini
+
+# Daily outbound USDT cap (autonomous runs + approved transfers). 0 = unlimited.
+DAILY_USDT_TRANSFER_CAP=0
+
+# Optional HMAC over audit bundle hashes for off-chain verification demos
+# AUDIT_SIGNING_SECRET=
+
+# Optional: link real tx hashes in dashboard (use {{txId}} or {{txHash}} placeholder)
+# BLOCK_EXPLORER_TX_URL_TEMPLATE=https://sepolia.etherscan.io/tx/{{txId}}
+
+# Optional: CORS for browser clients calling the API from another origin
+# ENABLE_CORS=false
+# CORS_ORIGIN=*
+
+# Optional: protect POST /ops/activity/clear and POST /safety/budget/reset when SIMULATION_MODE=false
+# OPS_TOKEN=

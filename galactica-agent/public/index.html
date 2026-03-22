@@ -1,0 +1,1267 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>StablePilot — Treasury Command</title>
+    <link rel="icon" href="/favicon.ico" sizes="any" />
+    <link rel="icon" type="image/svg+xml" href="/logo.svg" sizes="any" />
+    <link rel="apple-touch-icon" href="/logo.svg" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,400;0,9..40,500;0,9..40,600;0,9..40,700;1,9..40,400&family=JetBrains+Mono:wght@400;500&family=Syne:wght@500;600;700;800&display=swap"
+      rel="stylesheet"
+    />
+    <style>
+      :root {
+        color-scheme: dark;
+        font-family: "DM Sans", "Segoe UI", system-ui, sans-serif;
+        --bg-deep: #060a12;
+        --bg: #0a0f1a;
+        --card: rgba(21, 31, 50, 0.72);
+        --card-solid: #131c2e;
+        --border: rgba(56, 189, 248, 0.12);
+        --border-strong: rgba(148, 163, 184, 0.2);
+        --accent: #38bdf8;
+        --accent-dim: rgba(56, 189, 248, 0.15);
+        --violet: #a78bfa;
+        --ok: #4ade80;
+        --warn: #fbbf24;
+        --crit: #f87171;
+        --muted: #94a3b8;
+        --text: #f1f5f9;
+        --shadow: 0 18px 48px rgba(0, 0, 0, 0.45);
+        --radius: 14px;
+        --radius-sm: 10px;
+      }
+
+      *,
+      *::before,
+      *::after {
+        box-sizing: border-box;
+      }
+
+      body {
+        margin: 0;
+        min-height: 100vh;
+        color: var(--text);
+        background-color: var(--bg-deep);
+        background-image:
+          radial-gradient(ellipse 120% 80% at 50% -20%, rgba(56, 189, 248, 0.14), transparent 50%),
+          radial-gradient(ellipse 70% 50% at 100% 50%, rgba(129, 140, 248, 0.08), transparent 45%),
+          radial-gradient(ellipse 60% 40% at 0% 80%, rgba(34, 211, 238, 0.06), transparent 40%),
+          linear-gradient(180deg, var(--bg) 0%, var(--bg-deep) 100%);
+        background-attachment: fixed;
+      }
+
+      body::before {
+        content: "";
+        position: fixed;
+        inset: 0;
+        background-image: linear-gradient(rgba(148, 163, 184, 0.03) 1px, transparent 1px),
+          linear-gradient(90deg, rgba(148, 163, 184, 0.03) 1px, transparent 1px);
+        background-size: 48px 48px;
+        mask-image: radial-gradient(ellipse 85% 70% at 50% 30%, black, transparent);
+        pointer-events: none;
+        z-index: 0;
+      }
+
+      .container {
+        position: relative;
+        z-index: 1;
+        max-width: 1140px;
+        margin: 0 auto;
+        padding: 28px 22px 48px;
+      }
+
+      .site-header {
+        margin-bottom: 28px;
+        padding-bottom: 24px;
+        border-bottom: 1px solid var(--border-strong);
+      }
+
+      .brand-row {
+        display: flex;
+        align-items: center;
+        gap: 18px;
+        margin-bottom: 16px;
+      }
+
+      .brand-logo {
+        width: 56px;
+        height: 56px;
+        flex-shrink: 0;
+        border-radius: 14px;
+        box-shadow: 0 8px 32px rgba(56, 189, 248, 0.2), var(--shadow);
+        filter: drop-shadow(0 0 20px rgba(56, 189, 248, 0.25));
+      }
+
+      .brand-text {
+        display: flex;
+        flex-direction: column;
+        gap: 2px;
+      }
+
+      .brand-name {
+        font-size: clamp(1.5rem, 4vw, 1.85rem);
+        font-weight: 700;
+        letter-spacing: -0.03em;
+        line-height: 1.15;
+        background: linear-gradient(105deg, #f8fafc 0%, #e0f2fe 40%, #7dd3fc 100%);
+        -webkit-background-clip: text;
+        background-clip: text;
+        color: transparent;
+      }
+
+      .brand-tag {
+        font-size: 0.8rem;
+        font-weight: 500;
+        letter-spacing: 0.12em;
+        text-transform: uppercase;
+        color: var(--accent);
+        opacity: 0.95;
+      }
+
+      header .sub {
+        color: var(--muted);
+        font-size: 0.94rem;
+        line-height: 1.55;
+        max-width: 62ch;
+        margin: 0;
+      }
+
+      header .sub strong {
+        color: #cbd5e1;
+        font-weight: 600;
+      }
+
+      .grid {
+        display: grid;
+        gap: 16px;
+        grid-template-columns: repeat(auto-fit, minmax(268px, 1fr));
+      }
+
+      .card {
+        background: var(--card);
+        backdrop-filter: blur(12px);
+        -webkit-backdrop-filter: blur(12px);
+        border: 1px solid var(--border);
+        border-radius: var(--radius);
+        padding: 18px 18px 16px;
+        box-shadow: 0 4px 24px rgba(0, 0, 0, 0.25);
+        transition: border-color 0.2s ease, box-shadow 0.2s ease;
+      }
+
+      .card:hover {
+        border-color: rgba(56, 189, 248, 0.22);
+        box-shadow: 0 8px 32px rgba(0, 0, 0, 0.32), 0 0 0 1px rgba(56, 189, 248, 0.06);
+      }
+
+      .card h2 {
+        margin: 0 0 12px;
+        font-size: 0.72rem;
+        text-transform: uppercase;
+        letter-spacing: 0.1em;
+        color: var(--muted);
+        font-weight: 600;
+      }
+
+      .kpi {
+        font-size: clamp(1.75rem, 4vw, 2.15rem);
+        font-weight: 700;
+        line-height: 1.1;
+        letter-spacing: -0.02em;
+        font-variant-numeric: tabular-nums;
+      }
+
+      .muted {
+        color: var(--muted);
+        font-size: 0.88rem;
+      }
+
+      .health-bar {
+        height: 8px;
+        background: rgba(15, 23, 42, 0.9);
+        border-radius: 999px;
+        overflow: hidden;
+        margin-top: 12px;
+        box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.35);
+      }
+
+      .health-bar > i {
+        display: block;
+        height: 100%;
+        border-radius: 999px;
+        background: linear-gradient(90deg, var(--crit), var(--warn), #34d399);
+        transition: width 0.45s cubic-bezier(0.33, 1, 0.68, 1);
+        box-shadow: 0 0 12px rgba(74, 222, 128, 0.35);
+      }
+
+      .badge {
+        display: inline-block;
+        padding: 3px 10px;
+        border-radius: 999px;
+        font-size: 0.72rem;
+        font-weight: 700;
+        text-transform: uppercase;
+        letter-spacing: 0.06em;
+        margin-top: 8px;
+      }
+
+      .badge.healthy {
+        background: rgba(74, 222, 128, 0.15);
+        color: var(--ok);
+      }
+      .badge.warning {
+        background: rgba(251, 191, 36, 0.15);
+        color: var(--warn);
+      }
+      .badge.critical {
+        background: rgba(248, 113, 113, 0.15);
+        color: var(--crit);
+      }
+
+      button {
+        margin: 6px 8px 0 0;
+        border: 0;
+        border-radius: var(--radius-sm);
+        padding: 9px 16px;
+        cursor: pointer;
+        background: linear-gradient(165deg, #7dd3fc 0%, var(--accent) 100%);
+        color: #0c1222;
+        font-weight: 600;
+        font-size: 0.875rem;
+        font-family: inherit;
+        transition: transform 0.15s ease, filter 0.15s ease, box-shadow 0.15s ease;
+        box-shadow: 0 2px 12px rgba(56, 189, 248, 0.25);
+      }
+
+      button:hover {
+        filter: brightness(1.06);
+        box-shadow: 0 4px 20px rgba(56, 189, 248, 0.35);
+      }
+
+      button:active {
+        transform: scale(0.98);
+      }
+
+      button.secondary {
+        background: rgba(51, 65, 85, 0.85);
+        color: #f1f5f9;
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+      }
+
+      button.secondary:hover {
+        background: rgba(71, 85, 105, 0.95);
+        box-shadow: 0 4px 16px rgba(0, 0, 0, 0.28);
+      }
+
+      button.warn {
+        background: linear-gradient(165deg, #ef4444 0%, #b91c1c 100%);
+        color: white;
+        box-shadow: 0 2px 12px rgba(185, 28, 28, 0.35);
+      }
+
+      button.warn:hover {
+        filter: brightness(1.08);
+      }
+
+      button.ghost {
+        background: rgba(15, 23, 42, 0.5);
+        border: 1px solid var(--border-strong);
+        color: #e2e8f0;
+        box-shadow: none;
+      }
+
+      button.ghost:hover {
+        border-color: rgba(56, 189, 248, 0.35);
+        background: rgba(56, 189, 248, 0.08);
+      }
+
+      button.preset-active {
+        box-shadow: 0 0 0 2px var(--accent), 0 4px 16px rgba(56, 189, 248, 0.2);
+        border-color: var(--accent);
+      }
+
+      .row-actions {
+        display: flex;
+        flex-wrap: wrap;
+        align-items: center;
+        gap: 8px;
+        margin-top: 8px;
+      }
+
+      input[type="number"] {
+        width: 100px;
+        padding: 9px 12px;
+        border-radius: var(--radius-sm);
+        border: 1px solid var(--border-strong);
+        background: rgba(15, 23, 42, 0.85);
+        color: #e2e8f0;
+        font-family: "JetBrains Mono", ui-monospace, monospace;
+        font-size: 0.82rem;
+      }
+
+      input[type="number"]:focus {
+        outline: none;
+        border-color: rgba(56, 189, 248, 0.5);
+        box-shadow: 0 0 0 3px var(--accent-dim);
+      }
+
+      .table-wrap {
+        margin-top: 12px;
+        border-radius: var(--radius-sm);
+        border: 1px solid var(--border-strong);
+        overflow: hidden;
+        background: rgba(2, 6, 23, 0.45);
+      }
+
+      table {
+        width: 100%;
+        border-collapse: collapse;
+        font-size: 0.82rem;
+        font-variant-numeric: tabular-nums;
+      }
+
+      th,
+      td {
+        text-align: left;
+        padding: 10px 12px;
+        border-bottom: 1px solid rgba(51, 65, 85, 0.45);
+        vertical-align: top;
+      }
+
+      tr:last-child td {
+        border-bottom: 0;
+      }
+
+      tbody tr:hover td {
+        background: rgba(56, 189, 248, 0.04);
+      }
+
+      th {
+        color: var(--muted);
+        font-weight: 600;
+        font-size: 0.68rem;
+        text-transform: uppercase;
+        letter-spacing: 0.06em;
+        background: rgba(15, 23, 42, 0.65);
+      }
+
+      .table-wrap td a {
+        color: var(--accent);
+        text-decoration: none;
+        font-weight: 500;
+      }
+
+      .table-wrap td a:hover {
+        text-decoration: underline;
+        color: #7dd3fc;
+      }
+
+      .log {
+        white-space: pre-wrap;
+        font-family: "JetBrains Mono", ui-monospace, Consolas, monospace;
+        background: rgba(2, 6, 23, 0.75);
+        border: 1px solid var(--border-strong);
+        border-radius: var(--radius-sm);
+        padding: 12px 14px;
+        min-height: 72px;
+        font-size: 0.78rem;
+        line-height: 1.45;
+      }
+
+      a.export {
+        color: var(--accent);
+        font-size: 0.86rem;
+        margin-left: 10px;
+        text-decoration: none;
+        font-weight: 500;
+        border-bottom: 1px solid transparent;
+        transition: border-color 0.15s ease, color 0.15s ease;
+      }
+
+      a.export:hover {
+        color: #7dd3fc;
+        border-bottom-color: rgba(125, 211, 252, 0.5);
+      }
+
+      .policy-block {
+        font-family: "JetBrains Mono", ui-monospace, Consolas, monospace;
+        font-size: 0.76rem;
+        background: rgba(2, 6, 23, 0.75);
+        border: 1px solid var(--border-strong);
+        border-radius: var(--radius-sm);
+        padding: 12px;
+        overflow: auto;
+        max-height: 200px;
+        line-height: 1.45;
+      }
+
+      .feed-scroll {
+        max-height: 200px;
+        overflow-y: auto;
+        font-family: "JetBrains Mono", ui-monospace, Consolas, monospace;
+        font-size: 0.76rem;
+        scrollbar-width: thin;
+        scrollbar-color: rgba(56, 189, 248, 0.35) transparent;
+      }
+
+      .feed-line {
+        padding: 6px 0;
+        border-bottom: 1px solid #1e293b;
+      }
+
+      .pending-box {
+        background: rgba(2, 6, 23, 0.65);
+        border: 1px solid var(--border-strong);
+        border-radius: var(--radius-sm);
+        padding: 12px;
+        margin-top: 8px;
+        font-size: 0.82rem;
+      }
+
+      button.mini {
+        padding: 4px 10px;
+        font-size: 0.75rem;
+        margin-top: 6px;
+      }
+
+      button.autonomy-active {
+        box-shadow: 0 0 0 2px var(--violet), 0 4px 14px rgba(167, 139, 250, 0.2);
+      }
+
+      .nav-shell {
+        display: flex;
+        flex-wrap: wrap;
+        align-items: center;
+        gap: 10px;
+        padding: 10px 12px;
+        margin-bottom: 22px;
+        background: var(--card);
+        backdrop-filter: blur(12px);
+        -webkit-backdrop-filter: blur(12px);
+        border: 1px solid var(--border-strong);
+        border-radius: var(--radius);
+        box-shadow: var(--shadow);
+      }
+
+      .nav-bar {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 6px;
+        flex: 1;
+        min-width: 0;
+      }
+
+      .nav-btn {
+        margin: 0;
+        padding: 8px 14px;
+        font-size: 0.8rem;
+        font-weight: 600;
+        background: rgba(15, 23, 42, 0.65);
+        color: #cbd5e1;
+        border: 1px solid transparent;
+        border-radius: 999px;
+        box-shadow: none;
+      }
+
+      .nav-btn:hover {
+        background: rgba(56, 189, 248, 0.1);
+        color: #f1f5f9;
+        border-color: rgba(56, 189, 248, 0.2);
+      }
+
+      .nav-btn.active {
+        background: linear-gradient(145deg, rgba(56, 189, 248, 0.22), rgba(129, 140, 248, 0.18));
+        color: #f8fafc;
+        border-color: rgba(56, 189, 248, 0.45);
+        box-shadow: 0 0 20px rgba(56, 189, 248, 0.12);
+      }
+
+      .panel {
+        display: none;
+      }
+
+      .panel.active {
+        display: block;
+      }
+
+      .panel h3.section-label {
+        margin: 14px 0 6px;
+        font-size: 0.72rem;
+        text-transform: uppercase;
+        letter-spacing: 0.06em;
+        color: var(--muted);
+        font-weight: 600;
+      }
+
+      code {
+        font-family: "JetBrains Mono", ui-monospace, monospace;
+        font-size: 0.84em;
+        padding: 2px 7px;
+        border-radius: 6px;
+        background: rgba(56, 189, 248, 0.1);
+        border: 1px solid rgba(56, 189, 248, 0.18);
+        color: #bae6fd;
+      }
+
+      /* —— Cinematic landing hero —— */
+      .hero {
+        position: relative;
+        min-height: 100vh;
+        min-height: 100dvh;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        padding: 48px 20px 80px;
+        overflow: hidden;
+      }
+
+      .hero-aurora {
+        position: absolute;
+        inset: -40%;
+        background:
+          radial-gradient(ellipse 50% 42% at 30% 35%, rgba(56, 189, 248, 0.35), transparent 55%),
+          radial-gradient(ellipse 45% 38% at 72% 58%, rgba(129, 140, 248, 0.32), transparent 50%),
+          radial-gradient(ellipse 35% 30% at 50% 88%, rgba(34, 211, 238, 0.2), transparent 45%);
+        animation: hero-aurora-shift 18s ease-in-out infinite alternate;
+        pointer-events: none;
+        z-index: 0;
+      }
+
+      @keyframes hero-aurora-shift {
+        0% {
+          transform: translate(0, 0) rotate(0deg) scale(1);
+        }
+        100% {
+          transform: translate(3%, -2%) rotate(6deg) scale(1.05);
+        }
+      }
+
+      .hero-orbs {
+        position: absolute;
+        inset: 0;
+        pointer-events: none;
+        z-index: 0;
+      }
+
+      .hero-orb {
+        position: absolute;
+        border-radius: 50%;
+        filter: blur(60px);
+        opacity: 0.45;
+        animation: hero-float 14s ease-in-out infinite;
+      }
+
+      .hero-orb:nth-child(1) {
+        width: min(420px, 55vw);
+        height: min(420px, 55vw);
+        background: rgba(56, 189, 248, 0.45);
+        top: 8%;
+        left: -8%;
+        animation-delay: 0s;
+      }
+
+      .hero-orb:nth-child(2) {
+        width: min(360px, 48vw);
+        height: min(360px, 48vw);
+        background: rgba(167, 139, 250, 0.4);
+        bottom: 12%;
+        right: -6%;
+        animation-delay: -4s;
+      }
+
+      .hero-orb:nth-child(3) {
+        width: min(200px, 30vw);
+        height: min(200px, 30vw);
+        background: rgba(45, 212, 191, 0.35);
+        top: 42%;
+        right: 18%;
+        animation-delay: -7s;
+      }
+
+      @keyframes hero-float {
+        0%,
+        100% {
+          transform: translate(0, 0);
+        }
+        50% {
+          transform: translate(12px, -18px);
+        }
+      }
+
+      .hero-inner {
+        position: relative;
+        z-index: 2;
+        max-width: 920px;
+        text-align: center;
+      }
+
+      .hero-badge {
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        padding: 6px 14px 6px 10px;
+        border-radius: 999px;
+        font-size: 0.72rem;
+        font-weight: 700;
+        letter-spacing: 0.14em;
+        text-transform: uppercase;
+        color: #e0f2fe;
+        background: rgba(15, 23, 42, 0.65);
+        border: 1px solid rgba(56, 189, 248, 0.35);
+        box-shadow: 0 0 40px rgba(56, 189, 248, 0.15);
+        margin-bottom: 22px;
+        backdrop-filter: blur(10px);
+      }
+
+      .hero-badge i {
+        width: 8px;
+        height: 8px;
+        border-radius: 50%;
+        background: #4ade80;
+        box-shadow: 0 0 12px #4ade80;
+        animation: hero-pulse 2s ease-in-out infinite;
+      }
+
+      @keyframes hero-pulse {
+        0%,
+        100% {
+          opacity: 1;
+          transform: scale(1);
+        }
+        50% {
+          opacity: 0.65;
+          transform: scale(1.15);
+        }
+      }
+
+      .hero-title {
+        font-family: "Syne", "DM Sans", sans-serif;
+        font-size: clamp(2.35rem, 6.5vw, 3.85rem);
+        font-weight: 800;
+        line-height: 1.05;
+        letter-spacing: -0.04em;
+        margin: 0 0 20px;
+        color: #f8fafc;
+        text-shadow: 0 4px 48px rgba(0, 0, 0, 0.45);
+      }
+
+      .hero-gradient {
+        background: linear-gradient(
+          115deg,
+          #f8fafc 0%,
+          #7dd3fc 28%,
+          #38bdf8 48%,
+          #a78bfa 72%,
+          #c4b5fd 100%
+        );
+        background-size: 200% auto;
+        -webkit-background-clip: text;
+        background-clip: text;
+        color: transparent;
+        animation: hero-shimmer 7s linear infinite;
+      }
+
+      @keyframes hero-shimmer {
+        0% {
+          background-position: 0% center;
+        }
+        100% {
+          background-position: 200% center;
+        }
+      }
+
+      .hero-lead {
+        font-size: clamp(1rem, 2.2vw, 1.2rem);
+        line-height: 1.65;
+        color: #cbd5e1;
+        max-width: 52ch;
+        margin: 0 auto 32px;
+      }
+
+      .hero-lead strong {
+        color: #f1f5f9;
+        font-weight: 600;
+      }
+
+      .hero-stats {
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: center;
+        gap: 12px 20px;
+        margin-bottom: 32px;
+      }
+
+      .hero-stat {
+        min-width: 120px;
+        padding: 14px 20px;
+        border-radius: var(--radius);
+        background: rgba(15, 23, 42, 0.55);
+        border: 1px solid rgba(148, 163, 184, 0.18);
+        backdrop-filter: blur(12px);
+      }
+
+      .hero-stat span {
+        display: block;
+        font-family: "JetBrains Mono", monospace;
+        font-size: 1.65rem;
+        font-weight: 600;
+        color: #f8fafc;
+        line-height: 1.2;
+      }
+
+      .hero-stat small {
+        display: block;
+        margin-top: 4px;
+        font-size: 0.68rem;
+        text-transform: uppercase;
+        letter-spacing: 0.08em;
+        color: var(--muted);
+      }
+
+      .hero-cta {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 12px;
+        justify-content: center;
+        margin-bottom: 28px;
+      }
+
+      .hero-btn {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        padding: 14px 28px;
+        border-radius: 999px;
+        font-weight: 700;
+        font-size: 0.95rem;
+        text-decoration: none;
+        transition: transform 0.2s ease, box-shadow 0.2s ease;
+      }
+
+      .hero-btn:active {
+        transform: scale(0.98);
+      }
+
+      .hero-btn-primary {
+        color: #0c1222;
+        background: linear-gradient(135deg, #7dd3fc, #38bdf8, #818cf8);
+        box-shadow: 0 8px 32px rgba(56, 189, 248, 0.4);
+      }
+
+      .hero-btn-primary:hover {
+        box-shadow: 0 12px 40px rgba(56, 189, 248, 0.55);
+      }
+
+      .hero-btn-ghost {
+        color: #e2e8f0;
+        border: 1px solid rgba(148, 163, 184, 0.35);
+        background: rgba(15, 23, 42, 0.4);
+      }
+
+      .hero-btn-ghost:hover {
+        border-color: rgba(56, 189, 248, 0.45);
+        background: rgba(56, 189, 248, 0.08);
+      }
+
+      .hero-marquee {
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: center;
+        gap: 8px;
+        max-width: 720px;
+        margin: 0 auto;
+      }
+
+      .hero-chip {
+        font-size: 0.72rem;
+        font-weight: 600;
+        letter-spacing: 0.04em;
+        padding: 6px 12px;
+        border-radius: 999px;
+        background: rgba(56, 189, 248, 0.1);
+        border: 1px solid rgba(56, 189, 248, 0.22);
+        color: #bae6fd;
+      }
+
+      .hero-scroll {
+        position: absolute;
+        bottom: 20px;
+        left: 50%;
+        transform: translateX(-50%);
+        font-size: 0.7rem;
+        letter-spacing: 0.2em;
+        text-transform: uppercase;
+        color: var(--muted);
+        z-index: 2;
+        animation: hero-bob 2.5s ease-in-out infinite;
+      }
+
+      @keyframes hero-bob {
+        0%,
+        100% {
+          opacity: 0.5;
+          transform: translateX(-50%) translateY(0);
+        }
+        50% {
+          opacity: 1;
+          transform: translateX(-50%) translateY(6px);
+        }
+      }
+
+      @media (prefers-reduced-motion: reduce) {
+        .hero-aurora,
+        .hero-orb,
+        .hero-gradient,
+        .hero-badge i,
+        .hero-scroll {
+          animation: none !important;
+        }
+      }
+
+      #command-center {
+        scroll-margin-top: 24px;
+      }
+    </style>
+  </head>
+  <body>
+    <section class="hero" aria-label="StablePilot introduction">
+      <div class="hero-aurora" aria-hidden="true"></div>
+      <div class="hero-orbs" aria-hidden="true">
+        <div class="hero-orb"></div>
+        <div class="hero-orb"></div>
+        <div class="hero-orb"></div>
+      </div>
+      <div class="hero-inner">
+        <div class="hero-badge"><i aria-hidden="true"></i> Live governance stack</div>
+        <h1 class="hero-title">
+          Treasury that thinks in<br />
+          <span class="hero-gradient">statistics first</span>
+        </h1>
+        <p class="hero-lead">
+          <strong>StablePilot</strong> is a four-layer Treasury Governance OS — rules, z-score drift, council narrative,
+          and execution with WDK. Built for hackathon judges who care about <strong>auditability</strong>, not vibes.
+        </p>
+        <div class="hero-stats">
+          <div class="hero-stat">
+            <span id="heroTsi">—</span>
+            <small>Stability Index</small>
+          </div>
+          <div class="hero-stat">
+            <span id="heroTier">—</span>
+            <small>Tier</small>
+          </div>
+          <div class="hero-stat">
+            <span id="heroVer">—</span>
+            <small>Build</small>
+          </div>
+        </div>
+        <div class="hero-cta">
+          <a class="hero-btn hero-btn-primary" href="#command-center">Enter command center</a>
+          <a class="hero-btn hero-btn-ghost" href="/innovation/manifest" target="_blank" rel="noopener"
+            >Innovation manifest</a
+          >
+          <a class="hero-btn hero-btn-ghost" href="/openapi.json" target="_blank" rel="noopener">OpenAPI</a>
+        </div>
+        <div class="hero-marquee">
+          <span class="hero-chip">TSI composite score</span>
+          <span class="hero-chip">Policy matrix</span>
+          <span class="hero-chip">Attestation chain</span>
+          <span class="hero-chip">Scenario-chain lab</span>
+          <span class="hero-chip">Dual-wallet telemetry</span>
+          <span class="hero-chip">Signed webhooks</span>
+          <span class="hero-chip">Badges &amp; streak</span>
+          <span class="hero-chip">Judge trust score</span>
+        </div>
+      </div>
+      <p class="hero-scroll">Scroll</p>
+    </section>
+
+    <div class="container" id="command-center">
+      <header class="site-header">
+        <div class="brand-row">
+          <img class="brand-logo" src="/logo.svg" width="56" height="56" alt="" />
+          <div class="brand-text">
+            <span class="brand-name">StablePilot</span>
+            <span class="brand-tag">Treasury Governance OS</span>
+          </div>
+        </div>
+        <p class="sub">
+          <strong>Four-layer pipeline</strong> (rules → drift statistics → council narrative → execution), optional
+          human approval like enterprise payment controls, runway forecasting, and WDK transfers. Differentiator vs
+          “LLM-only” agents: reproducible z-scores on balance flow — industrial anomaly detection (Six Sigma–style), not
+          vibes.
+        </p>
+      </header>
+
+      <div class="nav-shell">
+        <nav class="nav-bar" id="mainNav" aria-label="Dashboard sections">
+          <button type="button" class="nav-btn active" data-panel="overview">Overview</button>
+          <button type="button" class="nav-btn" data-panel="policy">Policy &amp; labs</button>
+          <button type="button" class="nav-btn" data-panel="governance">Governance</button>
+          <button type="button" class="nav-btn" data-panel="safety">Safety</button>
+          <button type="button" class="nav-btn" data-panel="judge">Judge pack</button>
+          <button type="button" class="nav-btn" data-panel="insights">Insights &amp; ops</button>
+          <button type="button" class="nav-btn" data-panel="playbook">Playbook</button>
+          <button type="button" class="nav-btn" data-panel="runs">Runs &amp; log</button>
+        </nav>
+      </div>
+
+      <div id="panel-overview" class="panel active">
+      <div class="grid">
+        <div class="card">
+          <h2>Treasury health</h2>
+          <div id="healthScore" class="kpi">—</div>
+          <div class="health-bar"><i id="healthFill" style="width: 0%"></i></div>
+          <div id="healthBadge" class="badge healthy" style="display: none"></div>
+          <p id="healthMeta" class="muted" style="margin-top: 10px"></p>
+        </div>
+
+        <div class="card">
+          <h2>Agent</h2>
+          <div id="agentState" class="kpi">—</div>
+          <p id="agentInterval" class="muted"></p>
+          <p id="cooldownLine" class="muted"></p>
+          <button type="button" id="startBtn">Start loop</button>
+          <button type="button" id="stopBtn" class="warn">Stop loop</button>
+          <button type="button" id="runBtn" class="secondary">Run once</button>
+        </div>
+
+        <div class="card">
+          <h2>Wallet (USDT)</h2>
+          <div id="walletBalance" class="kpi">—</div>
+          <p id="walletMeta" class="muted"></p>
+          <button type="button" id="refreshSnapshotBtn" class="secondary">Refresh snapshot</button>
+        </div>
+      </div>
+      </div>
+
+      <div id="panel-policy" class="panel">
+      <div class="grid" style="margin-top: 0">
+        <div class="card">
+          <h2>Policy preset</h2>
+          <p class="muted">Adjusts effective min / target / max on top of your .env base values.</p>
+          <div class="row-actions">
+            <button type="button" class="ghost preset-btn" data-preset="conservative">Conservative</button>
+            <button type="button" class="ghost preset-btn" data-preset="balanced">Balanced</button>
+            <button type="button" class="ghost preset-btn" data-preset="aggressive">Aggressive</button>
+          </div>
+          <div id="effectivePolicy" class="policy-block" style="margin-top: 12px">Loading…</div>
+        </div>
+
+        <div class="card" id="simCard">
+          <h2>Demo: set simulated balance</h2>
+          <p class="muted" id="simHint">Only when server runs in simulation mode.</p>
+          <div class="row-actions">
+            <input type="number" id="simBalanceInput" placeholder="USDT" min="0" step="1" value="120" />
+            <button type="button" id="simApplyBtn" class="secondary">Apply</button>
+          </div>
+        </div>
+      </div>
+
+      <div class="grid" style="margin-top: 14px">
+        <div class="card" id="portfolioCard">
+          <h2>Multi-vault view (sim)</h2>
+          <p class="muted">
+            Illustrative satellite vaults; the agent still reads and transfers only the primary wallet via WDK.
+          </p>
+          <div id="portfolioBlock" class="policy-block" style="max-height: 160px">—</div>
+        </div>
+
+        <div class="card" id="labCard">
+          <h2>Stress lab (sim)</h2>
+          <p class="muted">Scripted liquidity shocks for repeatable demo videos — watch pipeline and z-score react.</p>
+          <div class="row-actions">
+            <button type="button" class="secondary shock-btn" data-kind="flash_drop" data-mag="35">
+              Flash drop 35%
+            </button>
+            <button type="button" class="secondary shock-btn" data-kind="sudden_inflow" data-mag="300">
+              Inflow +300
+            </button>
+            <button type="button" class="secondary shock-btn" data-kind="drain_small" data-mag="50">
+              Drain −50
+            </button>
+          </div>
+        </div>
+
+        <div class="card">
+          <h2>Audit &amp; LLM brief</h2>
+          <p class="muted">
+            <a class="export" href="/audit/bundle" target="_blank" rel="noopener">GET /audit/bundle</a> hashes run
+            history; optional HMAC with <code>AUDIT_SIGNING_SECRET</code>. LLM explain only paraphrases facts already on the
+            record.
+          </p>
+          <div class="row-actions">
+            <input type="number" id="explainRunId" placeholder="runId" min="1" step="1" style="width: 72px" />
+            <button type="button" id="explainBtn" class="secondary">Executive explain</button>
+          </div>
+          <p id="explainHint" class="muted" style="margin-top: 8px"></p>
+          <div id="explainOut" class="policy-block" style="margin-top: 8px; max-height: 100px; min-height: 48px">
+            —
+          </div>
+        </div>
+      </div>
+      </div>
+
+      <div id="panel-safety" class="panel">
+      <div class="card" style="margin-top: 0">
+        <h2>Safety & hard limits</h2>
+        <p id="safetyMeta" class="muted"></p>
+        <div class="row-actions">
+          <button type="button" id="circuitOpenBtn" class="warn">Open circuit (kill switch)</button>
+          <button type="button" id="circuitCloseBtn" class="secondary">Close circuit</button>
+          <a class="export" href="/policy/fingerprint" target="_blank" rel="noopener">Policy fingerprint</a>
+        </div>
+        <p class="muted" style="margin-top: 10px">
+          <strong>Daily cap:</strong> set <code>DAILY_USDT_TRANSFER_CAP</code> in <code>.env</code> (0 = unlimited).
+          <strong>Live stream:</strong> <code>GET /events/stream</code> (SSE) pushes every activity event.
+        </p>
+      </div>
+      </div>
+
+      <div id="panel-governance" class="panel">
+      <div class="grid" style="margin-top: 0">
+        <div class="card">
+          <h2>Governance & autonomy</h2>
+          <p id="govMeta" class="muted"></p>
+          <div class="row-actions">
+            <button type="button" class="ghost autonomy-btn" data-mode="autonomous">Autonomous execute</button>
+            <button type="button" class="ghost autonomy-btn" data-mode="approval">Approval required</button>
+          </div>
+          <p class="muted" style="margin-top: 10px">
+            Approval mode queues WDK transfers until you POST approve — similar semi-autonomous patterns in top
+            submissions (e.g. Intend, SigmaGuard).
+          </p>
+        </div>
+
+        <div class="card">
+          <h2>Pending WDK actions</h2>
+          <p class="muted">Approve or reject before funds move (approval mode).</p>
+          <div id="pendingList" class="muted">—</div>
+        </div>
+
+        <div class="card">
+          <h2>Ops stream</h2>
+          <p class="muted">Live activity — proposals, transfers, loop control.</p>
+          <div id="activityFeed" class="log feed-scroll"></div>
+        </div>
+      </div>
+      </div>
+
+      <div id="panel-judge" class="panel">
+        <div class="card" style="margin-top: 0">
+          <h2>Judge demo pack</h2>
+          <p class="muted">
+            One JSON snapshot for live demos: <code>GET /briefing/judge</code>. Hypothetical governance path with
+            <strong>no</strong> persistence or WDK transfer: <code>POST /agent/preview</code> (optional
+            <code>balance</code>). <a class="export" href="/judge-pack.html" target="_blank" rel="noopener">Print-friendly briefing</a>
+          </p>
+          <div class="row-actions">
+            <button type="button" id="loadBriefingBtn" class="secondary">Load judge briefing</button>
+            <button type="button" id="runPreviewBtn" class="secondary">Run preview</button>
+            <input
+              type="number"
+              id="previewBalanceInput"
+              placeholder="Optional USDT"
+              min="0"
+              step="1"
+              style="width: 120px"
+            />
+          </div>
+          <h3 class="section-label">Briefing JSON</h3>
+          <pre id="judgeBriefingOut" class="policy-block" style="max-height: 240px; margin: 0">—</pre>
+          <h3 class="section-label">Preview result</h3>
+          <pre id="previewOut" class="policy-block" style="max-height: 280px; margin: 0">—</pre>
+        </div>
+      </div>
+
+      <div id="panel-insights" class="panel">
+        <div class="grid" style="margin-top: 0">
+          <div class="card">
+            <h2>Rollups &amp; analytics</h2>
+            <p class="muted">New endpoints: summary, analytics, compliance bundle, Prometheus.</p>
+            <div class="row-actions">
+              <button type="button" id="btnTreasurySummary" class="secondary">Treasury summary</button>
+              <button type="button" id="btnAnalytics" class="secondary">Run analytics</button>
+              <button type="button" id="btnZstats" class="secondary">Z-stats</button>
+              <button type="button" id="btnGovStats" class="secondary">Governance stats</button>
+              <button type="button" id="btnActivityReport" class="secondary">Activity report</button>
+              <button type="button" id="btnCompliance" class="secondary">Compliance export</button>
+              <button type="button" id="btnPipelineDoc" class="secondary">Pipeline layers</button>
+            </div>
+            <h3 class="section-label" style="margin-top: 16px">Breakthrough APIs</h3>
+            <div class="row-actions">
+              <button type="button" id="btnTsi" class="secondary">TSI score</button>
+              <button type="button" id="btnPolicyMatrix" class="secondary">Policy matrix</button>
+              <button type="button" id="btnAttestation" class="secondary">Attestation</button>
+              <button type="button" id="btnDualWallet" class="secondary">Dual wallets</button>
+              <button type="button" id="btnScenarioChain" class="secondary">Scenario chain (demo)</button>
+            </div>
+            <p class="muted" style="margin-top: 10px">
+              <a class="export" href="/metrics" target="_blank" rel="noopener">/metrics</a>
+              <a class="export" href="/openapi.json" target="_blank" rel="noopener">OpenAPI</a>
+              <a class="export" href="/features" target="_blank" rel="noopener">Features</a>
+              <a class="export" href="/version" target="_blank" rel="noopener">Version</a>
+            </p>
+          </div>
+          <div class="card">
+            <h2>Ops &amp; simulation tools</h2>
+            <p class="muted">
+              Maintenance freeze skips WDK execution while still logging runs. Demo scenarios only in
+              <code>SIMULATION_MODE</code>. Sensitive actions work in sim or with <code>OPS_TOKEN</code> +
+              <code>X-Ops-Token</code>.
+            </p>
+            <div class="row-actions">
+              <button type="button" id="btnMaintFreeze" class="secondary">Freeze (maintenance)</button>
+              <button type="button" id="btnMaintThaw" class="secondary">Thaw</button>
+              <button type="button" id="btnWebhookTest" class="secondary">Webhook test</button>
+              <button type="button" id="btnClearActivity" class="secondary">Clear activity feed</button>
+              <button type="button" id="btnResetBudget" class="secondary">Reset daily budget</button>
+            </div>
+            <div class="row-actions" style="margin-top: 8px">
+              <button type="button" class="secondary scenario-btn" data-scenario="demo_healthy">Scenario: healthy</button>
+              <button type="button" class="secondary scenario-btn" data-scenario="demo_stressed">Stressed</button>
+              <button type="button" class="secondary scenario-btn" data-scenario="demo_balanced">Balanced</button>
+            </div>
+            <div class="row-actions" style="margin-top: 8px">
+              <input type="number" id="batchRunCount" placeholder="n" min="1" max="10" value="3" style="width: 56px" />
+              <button type="button" id="btnBatchRun" class="secondary">Batch runs</button>
+              <input
+                type="text"
+                id="intervalMsInput"
+                placeholder="interval ms"
+                style="width: 110px; font-family: inherit"
+              />
+              <button type="button" id="btnSetInterval" class="secondary">Set loop interval</button>
+            </div>
+          </div>
+          <div class="card">
+            <h2>Output</h2>
+            <pre id="insightsOut" class="policy-block" style="max-height: 360px; margin: 0">Tap a button — JSON appears here.</pre>
+          </div>
+        </div>
+      </div>
+
+      <div id="panel-playbook" class="panel">
+        <div class="grid" style="margin-top: 0">
+          <div class="card">
+            <h2>Engage &amp; trust</h2>
+            <p class="muted">Gamification + scores judges can quote on stage.</p>
+            <div class="row-actions">
+              <button type="button" class="secondary pb-btn" data-path="/engage/badges">Badges</button>
+              <button type="button" class="secondary pb-btn" data-path="/engage/streak">Streak</button>
+              <button type="button" class="secondary pb-btn" data-path="/insights/trust-score">Trust score</button>
+              <button type="button" class="secondary pb-btn" data-path="/insights/risk-radar">Risk radar</button>
+              <button type="button" class="secondary pb-btn" data-path="/goals/treasury">Goal status</button>
+            </div>
+            <div class="row-actions" style="margin-top: 8px">
+              <input type="number" id="goalTargetInput" placeholder="goal USDT" min="0" style="width: 100px" />
+              <input type="text" id="goalLabelInput" placeholder="label" style="width: 120px" />
+              <button type="button" id="btnGoalSave" class="secondary">Save goal</button>
+              <button type="button" id="btnGoalClear" class="secondary">Clear goal</button>
+            </div>
+          </div>
+          <div class="card">
+            <h2>Analysis &amp; governance</h2>
+            <p class="muted">Compare runs, stress runway, preview transfer gates.</p>
+            <div class="row-actions">
+              <button type="button" class="secondary pb-btn" data-path="/insights/balance-heatmap">Heatmap</button>
+              <input type="number" id="compareRunA" placeholder="run a" min="1" style="width: 72px" />
+              <input type="number" id="compareRunB" placeholder="run b" min="1" style="width: 72px" />
+              <button type="button" id="btnCompareRuns" class="secondary">Compare</button>
+            </div>
+            <div class="row-actions" style="margin-top: 8px">
+              <input type="number" id="runwayBurnInput" placeholder="burn/day" min="0" step="1" style="width: 100px" />
+              <button type="button" id="btnRunwayWhatif" class="secondary">Runway what-if</button>
+              <select id="policyDiffFrom" style="padding: 8px; border-radius: 8px; background: #0f172a; color: #e2e8f0; border: 1px solid var(--border-strong)">
+                <option value="conservative">from: conservative</option>
+                <option value="balanced">from: balanced</option>
+                <option value="aggressive">from: aggressive</option>
+              </select>
+              <select id="policyDiffTo" style="padding: 8px; border-radius: 8px; background: #0f172a; color: #e2e8f0; border: 1px solid var(--border-strong)">
+                <option value="balanced">to: balanced</option>
+                <option value="aggressive">to: aggressive</option>
+                <option value="conservative">to: conservative</option>
+              </select>
+              <button type="button" id="btnPolicyDiff" class="secondary">Policy diff</button>
+            </div>
+            <div class="row-actions" style="margin-top: 8px">
+              <input type="number" id="previewAmountInput" placeholder="amount" min="0" style="width: 88px" />
+              <button type="button" id="btnPreviewImpact" class="secondary">Preview transfer impact</button>
+            </div>
+          </div>
+          <div class="card">
+            <h2>Meta, share &amp; bots</h2>
+            <p class="muted">Embeds, flags, copy-paste tools, command router.</p>
+            <div class="row-actions">
+              <button type="button" class="secondary pb-btn" data-path="/public/status">Public status</button>
+              <button type="button" class="secondary pb-btn" data-path="/meta/feature-flags">Feature flags</button>
+              <button type="button" class="secondary pb-btn" data-path="/meta/changelog">Changelog</button>
+              <button type="button" class="secondary pb-btn" data-path="/meta/request-stats">Request stats</button>
+              <button type="button" class="secondary pb-btn" data-path="/webhooks/catalog">Webhook catalog</button>
+            </div>
+            <div class="row-actions" style="margin-top: 8px">
+              <a class="export" href="/briefing/onepager" target="_blank" rel="noopener">One-pager (MD)</a>
+              <a class="export" href="/devtools/curl-bundle" target="_blank" rel="noopener">cURL bundle</a>
+              <button type="button" class="secondary pb-btn" data-path="/sim/presets">Sim presets</button>
+            </div>
+            <div class="row-actions" style="margin-top: 8px">
+              <input type="text" id="botCommandInput" placeholder="e.g. tip zscore" style="width: 200px" />
+              <button type="button" id="btnBotSend" class="secondary">Send command</button>
+            </div>
+          </div>
+          <div class="card">
+            <h2>Proof &amp; output</h2>
+            <p class="muted">Cryptographic run receipts + JSON sink.</p>
+            <div class="row-actions">
+              <input type="number" id="proofRunIdInput" placeholder="runId" min="1" style="width: 80px" />
+              <button type="button" id="btnProofRun" class="secondary">Proof of run</button>
+            </div>
+            <pre id="playbookOut" class="policy-block" style="margin-top: 12px; max-height: 280px">Explore the Playbook — JSON flows here.</pre>
+          </div>
+        </div>
+      </div>
+
+      <div id="panel-runs" class="panel">
+      <div class="card" style="margin-top: 0">
+        <h2>Recent agent runs</h2>
+        <div class="row-actions">
+          <button type="button" id="refreshHistoryBtn" class="secondary">Refresh history</button>
+          <a class="export" id="exportCsv" href="/agent/history/export?format=csv">Download CSV</a>
+          <a class="export" href="/agent/history/export?format=json">JSON export</a>
+          <a class="export" href="/api/routes" target="_blank" rel="noopener">API index</a>
+        </div>
+        <div class="table-wrap">
+          <table>
+            <thead>
+              <tr>
+                <th>#</th>
+                <th>Time</th>
+                <th>Before</th>
+                <th>Decision</th>
+                <th>Amt</th>
+                <th>Transfer</th>
+                <th>After</th>
+                <th>Outcome</th>
+                <th>Note</th>
+              </tr>
+            </thead>
+            <tbody id="historyBody"></tbody>
+          </table>
+        </div>
+      </div>
+
+      <div class="card" style="margin-top: 14px">
+        <h2>Action log</h2>
+        <div id="actionLog" class="log"></div>
+      </div>
+      </div>
+    </div>
+
+    <script src="./main.js"></script>
+  </body>
+</html>

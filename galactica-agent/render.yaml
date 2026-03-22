@@ -1,0 +1,19 @@
+# https://render.com/docs/blueprint-spec
+services:
+  - type: web
+    name: stablepilot
+    runtime: docker
+    dockerfilePath: ./Dockerfile
+    dockerContext: .
+    plan: free
+    envVars:
+      - key: NODE_ENV
+        value: production
+      - key: PORT
+        value: "8080"
+      - key: HOST
+        value: "0.0.0.0"
+      - key: SIMULATION_MODE
+        value: "true"
+      - key: ENABLE_CORS
+        value: "true"

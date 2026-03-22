@@ -1,0 +1,69 @@
+{
+  "name": "stablepilot-treasury",
+  "description": "HTTP tools for OpenClaw (or any agent) to operate StablePilot treasury governance",
+  "baseUrl": "http://localhost:8080",
+  "tools": [
+    {
+      "name": "stablepilot_run_once",
+      "method": "POST",
+      "path": "/agent/run",
+      "body": {}
+    },
+    {
+      "name": "stablepilot_treasury_health",
+      "method": "GET",
+      "path": "/treasury/health"
+    },
+    {
+      "name": "stablepilot_list_pending_wdk",
+      "method": "GET",
+      "path": "/governance/pending"
+    },
+    {
+      "name": "stablepilot_approve_wdk_transfer",
+      "method": "POST",
+      "path": "/governance/approve/{id}",
+      "pathParams": ["id"]
+    },
+    {
+      "name": "stablepilot_set_autonomy",
+      "method": "POST",
+      "path": "/agent/autonomy",
+      "body": { "mode": "autonomous | approval" }
+    },
+    {
+      "name": "stablepilot_audit_bundle",
+      "method": "GET",
+      "path": "/audit/bundle"
+    },
+    {
+      "name": "stablepilot_explain_run",
+      "method": "POST",
+      "path": "/insights/explain",
+      "body": { "runId": 0 }
+    },
+    {
+      "name": "stablepilot_stress_shock",
+      "method": "POST",
+      "path": "/lab/shock",
+      "body": { "kind": "flash_drop | sudden_inflow | drain_small", "magnitude": 0 }
+    },
+    {
+      "name": "stablepilot_safety_circuit",
+      "method": "POST",
+      "path": "/safety/circuit",
+      "body": { "open": true }
+    },
+    {
+      "name": "stablepilot_policy_fingerprint",
+      "method": "GET",
+      "path": "/policy/fingerprint"
+    },
+    {
+      "name": "stablepilot_events_sse",
+      "method": "GET",
+      "path": "/events/stream",
+      "note": "SSE not JSON; consume as EventSource"
+    }
+  ]
+}
