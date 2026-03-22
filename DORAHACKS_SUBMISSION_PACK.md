@@ -31,6 +31,7 @@ Submission page: https://dorahacks.io/hackathon/hackathon-galactica-wdk-2026-01/
 | `submission/PITCH_DECK_SLIDES_EN.md` | Slide copy for video on-screen titles or pitch deck |
 | `submission/SUBMIT_FINAL_READINESS_EN.md` | What’s still missing before submit |
 | `submission/README_SUBMISSION_CHECKLIST.md` | Final checkbox pass |
+| `submission/HUONG_DAN_DANG_KY_VA_SUBMIT_VI.md` | Hướng dẫn đăng ký & submit (tiếng Việt) |
 
 ## 3) Required Assets Checklist
 
@@ -70,7 +71,7 @@ Mark each item done before final submit.
 ## 6) Submission Day Runbook
 
 1. Open DoraHacks project page
-2. Paste finalized content from `submission/FORM_ANSWERS_TEMPLATE.md`
+2. Paste finalized content from `submission/FORM_ANSWERS_COMPLETE_EN.md`
 3. Add repo + demo links
 4. Verify all teammates are attached
 5. Re-open every link in incognito to confirm public access
