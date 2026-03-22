@@ -32,6 +32,7 @@ Submission page: https://dorahacks.io/hackathon/hackathon-galactica-wdk-2026-01/
 | `submission/SUBMIT_FINAL_READINESS_EN.md` | What’s still missing before submit |
 | `submission/README_SUBMISSION_CHECKLIST.md` | Final checkbox pass |
 | `submission/HUONG_DAN_DANG_KY_VA_SUBMIT_VI.md` | Hướng dẫn đăng ký & submit (tiếng Việt) |
+| `submission/BUIDL_DESCRIPTION_EN.md` | BUIDL / project description variants (copy-paste) |
 
 ## 3) Required Assets Checklist
 
