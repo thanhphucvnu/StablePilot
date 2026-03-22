@@ -155,4 +155,4 @@ If your WDK setup uses a specific SDK package, replace the functions inside `src
 - Demo video: record endpoint flow (<= 5 min)
 - Technical architecture: included above
 - WDK integration proof: `src/integrations/wdkClient.ts`
-- Third-party disclosure: `../submission/THIRD_PARTY_DISCLOSURE_STABLEPILOT.md` (filled); blank scaffold: `../submission/THIRD_PARTY_DISCLOSURE_TEMPLATE.md`
+- Third-party disclosure: list dependencies from `package.json` plus WDK API and any optional OpenAI-compatible endpoint on your hackathon form

@@ -6,7 +6,7 @@ import { Resvg } from "@resvg/resvg-js";
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const root = path.join(__dirname, "..");
 const svgPath = path.join(root, "public", "logo.svg");
-const outDir = path.join(root, "..", "submission", "exports");
+const outDir = path.join(root, "branding");
 
 const svg = fs.readFileSync(svgPath);
 if (!fs.existsSync(outDir)) fs.mkdirSync(outDir, { recursive: true });
@@ -23,8 +23,8 @@ for (const { w, name } of sizes) {
   });
   const png = resvg.render().asPng();
   fs.writeFileSync(path.join(outDir, name), png);
-  console.log("Wrote", path.join("submission", "exports", name), png.length, "bytes");
+  console.log("Wrote", path.join("galactica-agent", "branding", name), png.length, "bytes");
 }
 
 fs.copyFileSync(svgPath, path.join(outDir, "stablepilot-logo.svg"));
-console.log("Wrote submission/exports/stablepilot-logo.svg (copy)");
+console.log("Wrote galactica-agent/branding/stablepilot-logo.svg (copy)");

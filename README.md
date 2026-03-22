@@ -26,7 +26,6 @@ Free instances **spin down** after idle; the first request after sleep may take 
 ## Docs
 
 - App README: [`galactica-agent/README.md`](galactica-agent/README.md)
-- Hackathon submission copy: [`submission/`](submission/)
 - Docker build: [`galactica-agent/Dockerfile`](galactica-agent/Dockerfile)
 
 ## License
