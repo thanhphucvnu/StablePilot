@@ -1,0 +1,22 @@
+# After your first Render deploy: Dashboard → your Web Service → Settings → Deploy Hook → copy URL.
+# GitHub repo → Settings → Secrets → Actions → New: RENDER_DEPLOY_HOOK_URL = that URL.
+# Then every push to main triggers a redeploy (stable public URL unchanged).
+name: Trigger Render deploy
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+jobs:
+  render:
+    runs-on: ubuntu-latest
+    steps:
+      - name: POST deploy hook
+        env:
+          HOOK: ${{ secrets.RENDER_DEPLOY_HOOK_URL }}
+        run: |
+          if [ -z "$HOOK" ]; then
+            echo "RENDER_DEPLOY_HOOK_URL secret not set — skipping (add in repo Settings → Secrets)."
+            exit 0
+          fi
+          curl -fsS -X POST "$HOOK"

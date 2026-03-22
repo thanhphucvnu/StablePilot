@@ -1,11 +1,14 @@
+# Render Blueprint — open https://dashboard.render.com/select-repo?type=blueprint
+# Pick repo thanhphucvnu/StablePilot; Render reads this file from repo root.
 # https://render.com/docs/blueprint-spec
 services:
   - type: web
     name: stablepilot
     runtime: docker
-    dockerfilePath: ./Dockerfile
-    dockerContext: .
+    dockerfilePath: ./galactica-agent/Dockerfile
+    dockerContext: ./galactica-agent
     plan: free
+    healthCheckPath: /health
     envVars:
       - key: NODE_ENV
         value: production
